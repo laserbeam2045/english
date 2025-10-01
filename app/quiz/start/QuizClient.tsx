@@ -53,28 +53,34 @@ export default function QuizClient({ words, categoryInfo }: Props) {
     // Escape special regex characters
     const escapedSpell = spell.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
-    // Replace multiple patterns to catch various cases
     let result = meaning
 
-    // 1. Exact match with word boundaries
-    result = result.replace(new RegExp(`\\b${escapedSpell}\\b`, 'gi'), '___')
+    // Match the word in all contexts - before/after any character
+    // Use global flag and match case-insensitively
+    const patterns = [
+      // Compound words like "daydream" when answer is "dream"
+      new RegExp(`([a-z]+)${escapedSpell}\\b`, 'gi'),
+      // Base form with word boundaries
+      new RegExp(`\\b${escapedSpell}\\b`, 'gi'),
+      // With suffixes
+      new RegExp(`\\b${escapedSpell}(s|ed|ing|er|est)\\b`, 'gi'),
+    ]
 
-    // 2. Plural form (with 's')
-    result = result.replace(new RegExp(`\\b${escapedSpell}s\\b`, 'gi'), '___')
-
-    // 3. Past/continuous forms (ed, ing)
-    result = result.replace(new RegExp(`\\b${escapedSpell}ed\\b`, 'gi'), '___')
-    result = result.replace(new RegExp(`\\b${escapedSpell}ing\\b`, 'gi'), '___')
+    for (const pattern of patterns) {
+      result = result.replace(pattern, (match) => {
+        // If it's a compound word (prefix + spell), replace the spell part only
+        const compoundMatch = match.match(new RegExp(`([a-z]+)(${escapedSpell})`, 'i'))
+        if (compoundMatch) {
+          return compoundMatch[1] + '___'
+        }
+        return '___'
+      })
+    }
 
     return result
   }
 
-  useEffect(() => {
-    // Only auto-focus on desktop
-    if (!isFinished && !showResult && !isMobile) {
-      inputRef.current?.focus()
-    }
-  }, [currentIndex, showResult, isFinished, isMobile])
+  // Remove auto-focus effect entirely
 
   // Trigger confetti for high scores
   useEffect(() => {
