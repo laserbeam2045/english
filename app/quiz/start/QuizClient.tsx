@@ -39,6 +39,13 @@ export default function QuizClient({ words, categoryInfo }: Props) {
 
   const currentWord = words[currentIndex]
 
+  // Hide the answer word in the meaning text
+  const hideMeaningWord = (meaning: string, spell: string): string => {
+    // Create a case-insensitive regex to match the spell
+    const regex = new RegExp(`\\b${spell}\\b`, 'gi')
+    return meaning.replace(regex, (match) => '___')
+  }
+
   useEffect(() => {
     if (!isFinished && !showResult) {
       inputRef.current?.focus()
@@ -348,12 +355,12 @@ export default function QuizClient({ words, categoryInfo }: Props) {
               </div>
 
               <div className="mb-6 sm:mb-8 p-6 sm:p-10 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-2xl border-2 border-blue-200 shadow-lg transform hover:scale-105 transition-transform duration-300">
-                <p className="text-2xl sm:text-4xl text-center font-bold bg-gradient-to-r from-gray-800 to-blue-800 bg-clip-text text-transparent leading-relaxed">
-                  {currentWord.meanings[0]}
+                <p className="text-xl sm:text-2xl text-center font-bold bg-gradient-to-r from-gray-800 to-blue-800 bg-clip-text text-transparent leading-relaxed">
+                  {hideMeaningWord(currentWord.meanings[0], currentWord.spell)}
                 </p>
                 {currentWord.meanings.length > 1 && (
                   <div className="mt-4 text-xs sm:text-sm text-gray-600 text-center font-medium">
-                    他の意味: {currentWord.meanings.slice(1).join(' / ')}
+                    他の意味: {currentWord.meanings.slice(1).map(m => hideMeaningWord(m, currentWord.spell)).join(' / ')}
                   </div>
                 )}
               </div>
