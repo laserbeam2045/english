@@ -104,6 +104,11 @@ export default function QuizClient({ words, categoryInfo }: Props) {
 
     setResults([...results, result])
     setShowResult(true)
+
+    // Blur input on mobile to hide keyboard
+    if (window.innerWidth < 640) {
+      inputRef.current?.blur()
+    }
   }
 
   const handleNext = () => {
