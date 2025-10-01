@@ -43,8 +43,9 @@ export default function QuizClient({ words, categoryInfo }: Props) {
   const hideMeaningWord = (meaning: string, spell: string): string => {
     // Escape special regex characters
     const escapedSpell = spell.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-    // Create a case-insensitive regex to match the spell
-    const regex = new RegExp(`\\b${escapedSpell}\\b`, 'gi')
+    // Create a case-insensitive regex to match the spell with optional 's' at the end
+    // and match it even if surrounded by non-word characters
+    const regex = new RegExp(`(?<=^|[^a-zA-Z])${escapedSpell}(s)?(?=[^a-zA-Z]|$)`, 'gi')
     return meaning.replace(regex, (match) => '___')
   }
 
