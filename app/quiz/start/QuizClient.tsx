@@ -111,6 +111,12 @@ export default function QuizClient({ words, categoryInfo }: Props) {
     if (isMobile) {
       inputRef.current?.blur()
     }
+
+    // Smooth scroll to top with ease-out
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
   }
 
   const handleNext = () => {
