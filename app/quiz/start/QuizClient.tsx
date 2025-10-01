@@ -35,7 +35,16 @@ export default function QuizClient({ words, categoryInfo }: Props) {
   const [showResult, setShowResult] = useState(false)
   const [isFinished, setIsFinished] = useState(false)
   const [showQuitConfirm, setShowQuitConfirm] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // Detect if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+    }
+    checkMobile()
+  }, [])
 
   const currentWord = words[currentIndex]
 
@@ -50,11 +59,11 @@ export default function QuizClient({ words, categoryInfo }: Props) {
   }
 
   useEffect(() => {
-    // Only auto-focus on desktop (screen width >= 640px)
-    if (!isFinished && !showResult && window.innerWidth >= 640) {
+    // Only auto-focus on desktop
+    if (!isFinished && !showResult && !isMobile) {
       inputRef.current?.focus()
     }
-  }, [currentIndex, showResult, isFinished])
+  }, [currentIndex, showResult, isFinished, isMobile])
 
   // Trigger confetti for high scores
   useEffect(() => {
@@ -107,7 +116,7 @@ export default function QuizClient({ words, categoryInfo }: Props) {
     setShowResult(true)
 
     // Blur input on mobile to hide keyboard
-    if (window.innerWidth < 640) {
+    if (isMobile) {
       inputRef.current?.blur()
     }
   }
