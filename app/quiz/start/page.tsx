@@ -30,8 +30,13 @@ async function getQuizWords(grade: number, category: number) {
     meanings: word.english_relations.map((rel: any) => rel.english_means.mean)
   }))
 
-  // Shuffle array
-  return words.sort(() => Math.random() - 0.5)
+  // Shuffle array using Fisher-Yates algorithm
+  for (let i = words.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [words[i], words[j]] = [words[j], words[i]]
+  }
+
+  return words
 }
 
 async function getCategoryInfo(grade: number, category: number) {

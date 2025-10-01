@@ -41,13 +41,16 @@ export default function QuizClient({ words, categoryInfo }: Props) {
 
   // Hide the answer word in the meaning text
   const hideMeaningWord = (meaning: string, spell: string): string => {
+    // Escape special regex characters
+    const escapedSpell = spell.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     // Create a case-insensitive regex to match the spell
-    const regex = new RegExp(`\\b${spell}\\b`, 'gi')
+    const regex = new RegExp(`\\b${escapedSpell}\\b`, 'gi')
     return meaning.replace(regex, (match) => '___')
   }
 
   useEffect(() => {
-    if (!isFinished && !showResult) {
+    // Only auto-focus on desktop (screen width >= 640px)
+    if (!isFinished && !showResult && window.innerWidth >= 640) {
       inputRef.current?.focus()
     }
   }, [currentIndex, showResult, isFinished])
