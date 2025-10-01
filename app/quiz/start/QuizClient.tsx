@@ -387,16 +387,10 @@ export default function QuizClient({ words, categoryInfo }: Props) {
                   type="text"
                   value={userAnswer}
                   onChange={(e) => setUserAnswer(e.target.value)}
-                  className="w-full text-2xl sm:text-4xl p-5 sm:p-8 border-2 border-gray-300 rounded-2xl mb-5 text-center focus:border-blue-500 focus:ring-4 focus:ring-blue-200 focus:outline-none transition-all shadow-lg font-bold"
-                  placeholder="英単語を入力"
+                  className="w-full text-lg sm:text-xl p-4 sm:p-5 border-2 border-gray-300 rounded-xl text-center focus:border-blue-500 focus:ring-4 focus:ring-blue-200 focus:outline-none transition-all shadow-lg font-semibold"
+                  placeholder="英単語を入力してEnter"
                   autoComplete="off"
                 />
-                <button
-                  type="submit"
-                  className="w-full py-4 sm:py-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl text-base sm:text-xl font-bold hover:from-blue-700 hover:to-indigo-700 active:scale-95 transition-all shadow-xl hover:shadow-2xl"
-                >
-                  回答する (Enter)
-                </button>
               </form>
             </>
           ) : (
