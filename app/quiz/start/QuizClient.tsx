@@ -50,34 +50,9 @@ export default function QuizClient({ words, categoryInfo }: Props) {
 
   // Hide the answer word in the meaning text
   const hideMeaningWord = (meaning: string, spell: string): string => {
-    // Escape special regex characters
-    const escapedSpell = spell.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-
-    let result = meaning
-
-    // Match the word in all contexts - before/after any character
-    // Use global flag and match case-insensitively
-    const patterns = [
-      // Compound words like "daydream" when answer is "dream"
-      new RegExp(`([a-z]+)${escapedSpell}\\b`, 'gi'),
-      // Base form with word boundaries
-      new RegExp(`\\b${escapedSpell}\\b`, 'gi'),
-      // With suffixes
-      new RegExp(`\\b${escapedSpell}(s|ed|ing|er|est)\\b`, 'gi'),
-    ]
-
-    for (const pattern of patterns) {
-      result = result.replace(pattern, (match) => {
-        // If it's a compound word (prefix + spell), replace the spell part only
-        const compoundMatch = match.match(new RegExp(`([a-z]+)(${escapedSpell})`, 'i'))
-        if (compoundMatch) {
-          return compoundMatch[1] + '___'
-        }
-        return '___'
-      })
-    }
-
-    return result
+    // Simple case-insensitive replacement
+    const regex = new RegExp(spell, 'gi')
+    return meaning.replace(regex, '___')
   }
 
   // Remove auto-focus effect entirely
@@ -409,7 +384,6 @@ export default function QuizClient({ words, categoryInfo }: Props) {
                   className="w-full text-2xl sm:text-4xl p-5 sm:p-8 border-2 border-gray-300 rounded-2xl mb-5 text-center focus:border-blue-500 focus:ring-4 focus:ring-blue-200 focus:outline-none transition-all shadow-lg font-bold"
                   placeholder="英単語を入力"
                   autoComplete="off"
-                  autoFocus
                 />
                 <button
                   type="submit"
@@ -438,7 +412,6 @@ export default function QuizClient({ words, categoryInfo }: Props) {
               <button
                 onClick={handleNext}
                 className="px-8 sm:px-12 py-4 sm:py-5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-2xl text-base sm:text-xl font-bold hover:from-blue-700 hover:to-indigo-700 active:scale-95 transition-all shadow-xl hover:shadow-2xl"
-                autoFocus
               >
                 {currentIndex < words.length - 1 ? '次へ (Enter)' : '結果を見る (Enter)'}
               </button>
